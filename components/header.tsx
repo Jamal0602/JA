@@ -26,9 +26,9 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-10 w-40">
               <Image
-                src="/placeholder.svg?height=40&width=160"
+                src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj86NHEIi9Ilu0zC9Ro9Yy8tWxMXM_tYPoV2m3MatFG_YLrc0OAecdcaGAOH4eVB8K5f2EMnsrE4WntiNh1O61BiJARb4AUqKRdPRSEPv4cj8-OMKKAULcAzt-_oI1OxQmj4wIiBHDm65QS7EubVQ_7kZ2j9ChdHSBMVPlhaQPqCyL_V8k/s1600/jamal%20(2).png"
                 alt="Jamal Asraf Logo"
-                width={160}
+                width={40}
                 height={40}
                 className="object-contain"
                 priority
@@ -58,7 +58,7 @@ export default function Header() {
               About
             </Link>
             <Link href="/skills" className="transition-colors hover:text-primary">
-              Skills & Tasks
+              Skills
             </Link>
             <Link href="/contact" className="transition-colors hover:text-primary">
               Contact
