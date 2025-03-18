@@ -33,7 +33,7 @@ export default function Home() {
           <div className="md:w-1/2 flex justify-center md:justify-end">
             <div className="relative w-full max-w-sm aspect-[3/4]">
               <Image
-                src="/placeholder.svg?height=600&width=450"
+                src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgGG3xdTdSIeC21dw2cgm-pNUhyO4bpcb7Z-b2vAy7bwjkQgXlR-HdAMO-50bs-zUd_4XLWvAkVznMUQpmr9gg_b1Dy6FWu-lKJyPwUq3sTofN0-R9L5ichYrB868RWgTjfGQB39uRG80jutCubvLMjXNnYP3yfKW6YknxSJ4ZKZPK-Wxw/s1600/e436bdac-0981-48e6-9627-482cc1a54fed.png"
                 alt="Jamal Asraf"
                 fill
                 className="object-contain"
