@@ -17,20 +17,19 @@ export default function AboutPage() {
               </div>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  Hello! I'm Jamal Asraf, a passionate technologist with over 15 years of experience in the field of
-                  electronics, IoT, and web development. Since 2008, I've been working on various projects that combine
-                  hardware and software to create innovative solutions.
+                  Hello! I'm Jamal Asraf, An entrepreneur with a lot of big Dreams. Born in 2008 Feb 6. I've been working on various projects that combine
+                  hardware and software to create innovative solutions. I did a lot of projects in <a href="periyar-atl.blogspot.com">ATAL</a>. And participated and won many competition and
+                  hacktones.
                 </p>
                 <p>
-                  My journey began with a fascination for electronics, which eventually led me to explore the world of
-                  programming and web development. Today, I specialize in creating integrated systems that leverage the
-                  power of IoT to solve real-world problems.
+                  My tech journey begins in 2022, me and my friend planed to make a startup in future it's <a href= "mpa.cubiz.space">MPA</a> its done in 2024. i begin with blogger and now i am 
+                  just created it on React using ai on 2025 it's a big change.
                 </p>
               </div>
             </div>
             <div className="flex justify-center lg:justify-end">
               <div className="relative w-full max-w-sm aspect-square rounded-full overflow-hidden border-8 border-background shadow-xl">
-                <Image src="/placeholder.svg?height=500&width=500" alt="Jamal Asraf" fill className="object-cover" />
+                <Image src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiPIuT7eIicQX-8hDfI6MyXNZxfXdac0VvIqYhQCLqT7IwDEkyL4-keeoxAYW3x13QlLLtJqL3Ab9KX8rhFtDhc4hbxHVS0WOLQxkA3oW1RdIj-tTS0b8x06F4H1L-qYfQPS9oM5tKPBIQ4bCF_uz4QZr5MG2F2Mr2i_txHpcCWmA6W0GY/s1600/small%20boy.jpg" alt="Jamal Asraf" fill className="object-cover" />
               </div>
             </div>
           </div>
@@ -50,32 +49,18 @@ export default function AboutPage() {
           <div className="mt-12 space-y-8">
             {[
               {
-                year: "2020 - Present",
-                title: "Senior IoT Developer",
-                organization: "Tech Innovations Inc.",
-                description: "Leading the development of IoT solutions for industrial applications.",
-                icon: Briefcase,
+                year: "2025 - Startup Begin",
+                title: "CEO OF Cubiz Group's of Technology",
+                organization: "Cubiz Group's of Technology",
+                description: "Managing Users, Employees, Projects, Websites, Domains.",
+                icon: Startup,
               },
               {
-                year: "2015 - 2020",
-                title: "Electronics Engineer",
-                organization: "Smart Systems Ltd.",
-                description: "Designed and implemented electronic systems for automation and control.",
-                icon: Briefcase,
-              },
-              {
-                year: "2012 - 2015",
-                title: "Web Developer",
-                organization: "Digital Solutions",
-                description: "Created responsive web applications and interfaces for various clients.",
-                icon: Briefcase,
-              },
-              {
-                year: "2008 - 2012",
-                title: "Bachelor's in Electronics Engineering",
-                organization: "University of Technology",
-                description: "Graduated with honors, specializing in embedded systems.",
-                icon: GraduationCap,
+                year: "2023 - 2025",
+                title: "Project Developer & Student",
+                organization: "Periyar Govt Hr Sec School",
+                description: "As a Student passed secondary school & working in ATAL as IOT & Arduino Project Developer",
+                icon: Developer,
               },
             ].map((item, index) => (
               <div key={index} className="flex flex-col md:flex-row gap-4">
@@ -113,20 +98,12 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-12">
             {[
-              "Electronics Design",
               "IoT Development",
               "Web Development",
-              "Embedded Systems",
-              "Circuit Design",
-              "PCB Layout",
-              "Microcontrollers",
-              "Sensors Integration",
-              "JavaScript",
+              "LOGO Disgner",
               "Python",
-              "C/C++",
+              "C++",
               "HTML/CSS",
-              "React",
-              "Node.js",
               "Arduino",
               "Raspberry Pi",
             ].map((skill, index) => (
