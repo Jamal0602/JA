@@ -12,7 +12,8 @@ import AdminPageList from "@/components/admin-page-list"
 import AdminSettings from "@/components/admin-settings"
 import AdminDomains from "@/components/admin-domains"
 import AdminNotifications from "@/components/admin-notifications"
-import { PlusCircle, LogOut, Settings, FileText, Layout, Globe, Bell } from "lucide-react"
+import AdminAnalyticsWidget from "@/components/admin-analytics-widget"
+import { PlusCircle, LogOut, Settings, FileText, Layout, Globe, Bell, BarChart } from "lucide-react"
 
 export default function AdminPage() {
   const { logout } = useAdmin()
@@ -49,7 +50,7 @@ export default function AdminPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid grid-cols-3 md:grid-cols-6 gap-2">
+        <TabsList className="grid grid-cols-2 md:grid-cols-7 gap-2">
           <TabsTrigger value="posts" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             <span className="hidden md:inline">Posts</span>
@@ -69,6 +70,10 @@ export default function AdminPage() {
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell className="h-4 w-4" />
             <span className="hidden md:inline">Notifications</span>
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart className="h-4 w-4" />
+            <span className="hidden md:inline">Analytics</span>
           </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
@@ -139,6 +144,19 @@ export default function AdminPage() {
             </Button>
           </div>
           <AdminNotifications />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Analytics</h2>
+            <Button asChild>
+              <Link href="/admin/analytics">
+                <BarChart className="mr-2 h-4 w-4" />
+                Detailed Analytics
+              </Link>
+            </Button>
+          </div>
+          <AdminAnalyticsWidget />
         </TabsContent>
 
         <TabsContent value="settings" className="space-y-4">
