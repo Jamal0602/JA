@@ -22,9 +22,20 @@ import {
 import { Input } from "@/components/ui/input"
 import { useToast } from "@/hooks/use-toast"
 
+type NotificationType = "info" | "success" | "warning" | "error";
+
+interface Notification {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+  isRead: boolean;
+  type: NotificationType;
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [notifications, setNotifications] = useState<any[]>([])
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadNotifications, setUnreadNotifications] = useState(0)
   const [subscriberCount, setSubscriberCount] = useState(0)
   const [likedPosts, setLikedPosts] = useState<string[]>([])
@@ -43,7 +54,7 @@ export default function Header() {
   // Load notifications and subscriber count
   useEffect(() => {
     // Simulate loading notifications
-    const mockNotifications = [
+    const mockNotifications: Notification[] = [
       {
         id: "1",
         title: "New Post Published",
@@ -114,10 +125,10 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2" aria-label="Jamal Asraf Portfolio Home">
             <div className="relative h-10 w-40">
               <Image
-                src="/placeholder.svg?height=40&width=160"
+                src="/logo.png"
                 alt="Jamal Asraf Logo"
                 width={160}
                 height={40}
@@ -129,18 +140,18 @@ export default function Header() {
 
           <div className="hidden md:flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
-              <Phone className="h-3 w-3" />
+              <Phone className="h-3 w-3" aria-hidden="true" />
               <span>+91 9********</span>
             </div>
             <div className="flex items-center gap-1">
-              <Mail className="h-3 w-3" />
+              <Mail className="h-3 w-3" aria-hidden="true" />
               <span>ja.jamalasraf@gmail.com</span>
             </div>
           </div>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6" aria-label="Main Navigation">
           <div className="flex gap-6 font-medium">
             <Link href="/" className="transition-colors hover:text-primary">
               Home
@@ -199,44 +210,56 @@ export default function Header() {
                   {unreadNotifications > 0 && (
                     <Badge
                       variant="destructive"
-                      className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-[10px]"
+                      className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
                     >
                       {unreadNotifications}
                     </Badge>
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-80 p-0" align="end">
-                <div className="flex items-center justify-between p-4 border-b">
-                  <h3 className="font-medium">Notifications</h3>
-                  {unreadNotifications > 0 && (
-                    <Button variant="ghost" size="sm" onClick={markAllNotificationsAsRead} className="text-xs">
-                      Mark all as read
-                    </Button>
-                  )}
+              <PopoverContent align="end" className="w-80 p-0">
+                <div className="p-4 border-b">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-medium">Notifications</h3>
+                    {unreadNotifications > 0 && (
+                      <Button variant="ghost" size="sm" onClick={markAllNotificationsAsRead}>
+                        Mark all as read
+                      </Button>
+                    )}
+                  </div>
                 </div>
-                <div className="max-h-80 overflow-auto">
+                <div className="max-h-80 overflow-y-auto">
                   {notifications.length === 0 ? (
-                    <div className="p-4 text-center text-muted-foreground">No notifications</div>
+                    <div className="p-4 text-center text-muted-foreground">No notifications yet</div>
                   ) : (
                     notifications.map((notification) => (
                       <div
                         key={notification.id}
-                        className={`p-4 border-b last:border-0 ${!notification.isRead ? "bg-muted/50" : ""}`}
+                        className={`p-4 border-b last:border-b-0 ${
+                          !notification.isRead ? "bg-muted/50" : ""
+                        }`}
                         onClick={() => markNotificationAsRead(notification.id)}
                       >
-                        <div className="flex justify-between items-start">
-                          <h4 className="font-medium">{notification.title}</h4>
-                          {!notification.isRead && (
-                            <Badge variant="secondary" className="ml-2">
-                              New
-                            </Badge>
-                          )}
+                        <div className="flex items-start gap-2">
+                          <div
+                            className={`w-2 h-2 mt-1.5 rounded-full ${
+                              notification.type === "info"
+                                ? "bg-blue-500"
+                                : notification.type === "success"
+                                ? "bg-green-500"
+                                : notification.type === "warning"
+                                ? "bg-yellow-500"
+                                : "bg-red-500"
+                            }`}
+                          />
+                          <div className="flex-1">
+                            <h4 className="font-medium">{notification.title}</h4>
+                            <p className="text-sm text-muted-foreground">{notification.content}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {new Date(notification.date).toLocaleDateString()}
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-sm text-muted-foreground mt-1">{notification.content}</p>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {new Date(notification.date).toLocaleDateString()}
-                        </p>
                       </div>
                     ))
                   )}
@@ -244,128 +267,52 @@ export default function Header() {
               </PopoverContent>
             </Popover>
 
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative" aria-label="Liked Posts">
-                  <Heart className="h-5 w-5" />
-                  {likedPosts.length > 0 && (
-                    <Badge
-                      variant="secondary"
-                      className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-[10px]"
-                    >
-                      {likedPosts.length}
-                    </Badge>
-                  )}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 p-0" align="end">
-                <div className="p-4 border-b">
-                  <h3 className="font-medium">Liked Posts</h3>
-                </div>
-                <div className="max-h-80 overflow-auto">
-                  {likedPosts.length === 0 ? (
-                    <div className="p-4 text-center text-muted-foreground">No liked posts</div>
-                  ) : (
-                    <div className="p-4 text-center text-muted-foreground">
-                      You have liked {likedPosts.length} posts
-                    </div>
-                  )}
-                </div>
-              </PopoverContent>
-            </Popover>
-
-            <Link href="https://instagram.com/Asraf_0602" target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="icon" aria-label="Instagram">
-                <Instagram className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="https://github.com/Jamal0602" target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="icon" aria-label="GitHub">
-                <Github className="h-4 w-4" />
-              </Button>
-            </Link>
             <ModeToggle />
           </div>
         </nav>
 
-        {/* Mobile Menu Button */}
-        <div className="flex items-center gap-2 md:hidden">
+        {/* Mobile Navigation Button */}
+        <div className="flex md:hidden items-center gap-4">
+          <Button variant="ghost" size="icon" className="relative" aria-label="Notifications">
+            <Bell className="h-5 w-5" />
+            {unreadNotifications > 0 && (
+              <Badge
+                variant="destructive"
+                className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+              >
+                {unreadNotifications}
+              </Badge>
+            )}
+          </Button>
           <ModeToggle />
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={isMenuOpen ? "Close Menu" : "Open Menu"}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
+          <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle Menu">
             {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="fixed inset-0 top-16 z-50 bg-background border-t p-6 md:hidden">
-          <nav className="flex flex-col gap-6">
-            <div className="flex flex-col gap-4 text-lg font-medium">
-              <Link href="/" className="transition-colors hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-                Home
-              </Link>
-              <Link href="/about" className="transition-colors hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-                About
-              </Link>
-              <Link
-                href="/skills"
-                className="transition-colors hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Skills & Tasks
-              </Link>
-              <Link
-                href="/contact"
-                className="transition-colors hover:text-primary"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Contact
-              </Link>
-            </div>
-
-            <div className="flex flex-col gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
-                <span>+91 9********</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <span>ja.jamalasraf@gmail.com</span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4 pt-4">
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1"
-                onClick={() => {
-                  setIsMenuOpen(false)
-                  setIsSubscribeDialogOpen(true)
-                }}
-              >
-                Subscribe
-                <Badge variant="secondary" className="ml-1">
-                  {subscriberCount}
-                </Badge>
-              </Button>
-              <Link href="https://instagram.com/Asraf_0602" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" aria-label="Instagram">
-                  <Instagram className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="https://github.com/Jamal0602" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" aria-label="GitHub">
-                  <Github className="h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
+        <div className="container py-4 md:hidden">
+          <nav className="flex flex-col gap-4">
+            <Link href="/" className="px-2 py-1 hover:bg-muted rounded-md">
+              Home
+            </Link>
+            <Link href="/about" className="px-2 py-1 hover:bg-muted rounded-md">
+              About
+            </Link>
+            <Link href="/skills" className="px-2 py-1 hover:bg-muted rounded-md">
+              Skills & Tasks
+            </Link>
+            <Link href="/contact" className="px-2 py-1 hover:bg-muted rounded-md">
+              Contact
+            </Link>
+            <Button variant="outline" size="sm" className="flex items-center justify-center gap-1 mt-2">
+              Subscribe
+              <Badge variant="secondary" className="ml-1">
+                {subscriberCount}
+              </Badge>
+            </Button>
           </nav>
         </div>
       )}

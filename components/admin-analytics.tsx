@@ -37,31 +37,63 @@ import {
   Cell,
   Legend,
 } from "recharts"
-import { Loader2, Download, RefreshCw } from "lucide-react"
+import { Loader2, Download, RefreshCw, Clock } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useAnalytics, TimeRange } from "@/hooks/use-analytics"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { useState } from "react"
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82ca9d"]
 
 export default function AdminAnalytics() {
-  const { data, isLoading, error, timeRange, setTimeRange, refreshData } = useAnalytics()
+  const { 
+    data, 
+    isLoading, 
+    error, 
+    timeRange, 
+    setTimeRange,
+    refreshData,
+    isAutoRefreshing,
+    toggleAutoRefresh 
+  } = useAnalytics('7d', { autoRefresh: false, refreshInterval: 30000 })
+  
+  const [isExporting, setIsExporting] = useState(false)
   const { theme } = useTheme()
   const { toast } = useToast()
   const textColor = theme === "dark" ? "#FFFFFF" : "#000000"
   const gridColor = theme === "dark" ? "#333333" : "#EEEEEE"
 
   const handleExportData = () => {
-    // In a real app, this would generate and download a CSV or PDF report
-    toast({
-      title: "Export Started",
-      description: "Your analytics data is being prepared for download.",
-    })
+    // Simulate export processing
+    setIsExporting(true)
+    
+    setTimeout(() => {
+      setIsExporting(false)
+      toast({
+        title: "Export Completed",
+        description: "Analytics data has been exported and is ready for download.",
+      })
+      
+      // In a real app, this would trigger a file download
+      const element = document.createElement("a")
+      const file = new Blob(
+        [JSON.stringify(data, null, 2)], 
+        { type: "application/json" }
+      )
+      element.href = URL.createObjectURL(file)
+      element.download = `analytics-${timeRange}-${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(element)
+      element.click()
+      document.body.removeChild(element)
+    }, 1500)
   }
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
+      <div className="flex flex-col justify-center items-center h-64 space-y-4">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground">Loading analytics data...</p>
       </div>
     )
   }
@@ -71,7 +103,7 @@ export default function AdminAnalytics() {
     return (
       <div className="text-center p-12 border rounded-lg">
         <h3 className="text-xl mb-4">Failed to load analytics data</h3>
-        <p className="mb-6">{error || "There was an error loading the analytics data. Please try again later."}</p>
+        <p className="mb-6 text-muted-foreground">{error || "There was an error loading the analytics data. Please try again later."}</p>
         <Button onClick={refreshData}>
           <RefreshCw className="mr-2 h-4 w-4" />
           Refresh Data
@@ -89,7 +121,7 @@ export default function AdminAnalytics() {
           <h2 className="text-2xl font-bold">Analytics Dashboard</h2>
           <p className="text-muted-foreground">Monitor website traffic and user engagement</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Select value={timeRange} onValueChange={(value) => setTimeRange(value as TimeRange)}>
             <SelectTrigger className="w-36">
               <SelectValue placeholder="Select range" />
@@ -102,12 +134,39 @@ export default function AdminAnalytics() {
               <SelectItem value="1y">Last year</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon" onClick={refreshData} title="Refresh data">
-            <RefreshCw className="h-4 w-4" />
+          
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="auto-refresh"
+              checked={isAutoRefreshing}
+              onCheckedChange={toggleAutoRefresh}
+            />
+            <Label htmlFor="auto-refresh" className="text-xs sm:text-sm cursor-pointer flex items-center">
+              <Clock className="h-3 w-3 mr-1" />
+              Auto-refresh
+            </Label>
+          </div>
+          
+          <Button variant="outline" size="icon" onClick={refreshData} disabled={isLoading} title="Refresh data">
+            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
-          <Button variant="outline" onClick={handleExportData}>
-            <Download className="mr-2 h-4 w-4" />
-            Export
+          
+          <Button 
+            variant="outline" 
+            onClick={handleExportData} 
+            disabled={isExporting || isLoading}
+          >
+            {isExporting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Exporting...
+              </>
+            ) : (
+              <>
+                <Download className="mr-2 h-4 w-4" />
+                Export
+              </>
+            )}
           </Button>
         </div>
       </div>
@@ -180,7 +239,18 @@ export default function AdminAnalytics() {
                   <XAxis dataKey="name" stroke={textColor} />
                   <YAxis stroke={textColor} />
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: theme === "dark" ? "#1f2937" : "#ffffff",
+                      border: `1px solid ${gridColor}`,
+                      borderRadius: "6px",
+                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                    }} 
+                    labelStyle={{ 
+                      color: textColor,
+                      fontWeight: "bold"
+                    }}
+                  />
                   <Area
                     type="monotone"
                     dataKey="visitors"
@@ -207,8 +277,19 @@ export default function AdminAnalytics() {
                   <XAxis dataKey="name" stroke={textColor} />
                   <YAxis stroke={textColor} />
                   <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <Tooltip />
-                  <Bar dataKey="views" fill="#82ca9d" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: theme === "dark" ? "#1f2937" : "#ffffff",
+                      border: `1px solid ${gridColor}`,
+                      borderRadius: "6px",
+                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                    }}
+                    labelStyle={{ 
+                      color: textColor,
+                      fontWeight: "bold"
+                    }}
+                  />
+                  <Bar dataKey="views" fill="#82ca9d" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -239,7 +320,15 @@ export default function AdminAnalytics() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: theme === "dark" ? "#1f2937" : "#ffffff",
+                      border: `1px solid ${gridColor}`,
+                      borderRadius: "6px",
+                      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
+                    }}
+                    formatter={(value: number) => [`${value}%`, 'Percentage']}
+                  />
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>

@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Phone, Mail, Instagram, Github, ArrowUp, Lock } from "lucide-react"
+import { Phone, Mail, Instagram, Github, ArrowUp, Lock, Linkedin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/auth-context"
 
@@ -31,6 +31,8 @@ export default function Footer() {
     })
   }
 
+  const currentYear = new Date().getFullYear()
+
   return (
     <footer className="w-full border-t bg-background">
       <div className="container py-8 md:py-12">
@@ -40,13 +42,18 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground">Personal website and portfolio since 2008.</p>
             <div className="flex items-center gap-3 pt-2">
               <Link href="https://instagram.com/Asraf_0602" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Instagram">
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Follow me on Instagram">
                   <Instagram className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="https://github.com/Jamal0602" target="_blank" rel="noopener noreferrer">
-                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="GitHub">
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="View my GitHub profile">
                   <Github className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="https://linkedin.com/in/jamalasraf" target="_blank" rel="noopener noreferrer">
+                <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Connect with me on LinkedIn">
+                  <Linkedin className="h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -54,7 +61,7 @@ export default function Footer() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Quick Links</h3>
-            <nav className="flex flex-col space-y-2 text-sm">
+            <nav className="flex flex-col space-y-2 text-sm" aria-label="Footer Navigation">
               <Link href="/" className="hover:text-primary transition-colors">
                 Home
               </Link>
@@ -74,12 +81,17 @@ export default function Footer() {
             <h3 className="text-lg font-semibold">Contact</h3>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4" />
+                <Phone className="h-4 w-4" aria-hidden="true" />
                 <span>+91 9********</span>
               </div>
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4" />
-                <span>ja.jamalasraf@gmail.com</span>
+                <Mail className="h-4 w-4" aria-hidden="true" />
+                <a 
+                  href="mailto:ja.jamalasraf@gmail.com" 
+                  className="hover:text-primary transition-colors"
+                >
+                  ja.jamalasraf@gmail.com
+                </a>
               </div>
             </div>
           </div>
@@ -88,7 +100,7 @@ export default function Footer() {
         <div className="flex flex-col-reverse sm:flex-row items-center justify-between mt-8 pt-8 border-t">
           <div className="flex items-center gap-2">
             <p className="text-xs text-muted-foreground mt-4 sm:mt-0">
-              © {new Date().getFullYear()} Jamal Asraf. All rights reserved.
+              © {currentYear} Jamal Asraf. All rights reserved.
             </p>
             <button
               onClick={handleAdminClick}

@@ -33,11 +33,12 @@ export default function Home() {
           <div className="md:w-1/2 flex justify-center md:justify-end">
             <div className="relative w-full max-w-sm aspect-[3/4]">
               <Image
-                src="/placeholder.svg?height=600&width=450"
-                alt="Jamal Asraf"
+                src="/profile-image.jpg"
+                alt="Jamal Asraf - Professional Portrait"
                 fill
-                className="object-contain"
+                className="object-cover rounded-lg shadow-lg"
                 priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
           </div>
