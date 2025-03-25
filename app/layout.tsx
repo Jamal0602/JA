@@ -8,6 +8,7 @@ import Footer from "@/components/footer"
 import { PostProvider } from "@/context/post-context"
 import { AuthProvider } from "@/context/auth-context"
 import { Toaster } from "@/components/ui/toaster"
+import Script from "next/script"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -25,6 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7483780622360467"
+     crossorigin="anonymous"></Script>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <AuthProvider>
             <PostProvider>
